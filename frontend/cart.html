@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Cart – BookStore</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<nav class="navbar">
+    <a href="index.html" class="brand">📚 Book<span>Store</span></a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="cart.html">🛒 Cart</a></li>
+        <li id="navAuth">
+            <a href="login.html">Login</a>
+        </li>
+    </ul>
+</nav>
+
+<!-- ===== Main ===== -->
+<main>
+    <div class="cart-container">
+        <h2>🛒 My Shopping Cart</h2>
+
+        <!-- Loading / empty states -->
+        <div id="spinner" class="spinner-wrapper">Loading cart…</div>
+        <div id="emptyState" class="empty-state" style="display:none;">
+            <div class="icon">🛒</div>
+            <p>Your cart is empty.</p>
+            <a href="index.html" class="btn btn-primary" style="margin-top:1rem;">Browse Books</a>
+        </div>
+
+        <!-- Cart items table -->
+        <div id="cartContent" style="display:none;">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="cartBody"></tbody>
+            </table>
+
+            <!-- Summary -->
+            <div class="cart-summary">
+                <div class="cart-total">
+                    Total: <span id="cartTotal">$0.00</span>
+                </div>
+                <div>
+                    <button class="btn btn-danger" id="clearCartBtn">Clear Cart</button>
+                    <button class="btn btn-success" id="checkoutBtn"
+                            style="margin-left:0.5rem;">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+    <p>&copy; 2025 BookStore. Built with HTML, CSS, JavaScript &amp; Java Servlets.</p>
+</footer>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

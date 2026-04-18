@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register – BookStore</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<nav class="navbar">
+    <a href="index.html" class="brand">📚 Book<span>Store</span></a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="cart.html">🛒 Cart</a></li>
+    </ul>
+</nav>
+
+<!-- ===== Main ===== -->
+<main>
+    <div class="auth-container">
+        <h2>📝 Create Account</h2>
+
+        <form id="registerForm" novalidate>
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username"
+                       placeholder="3–50 chars: letters, digits, underscore"
+                       autocomplete="username" maxlength="50">
+                <span class="field-error" id="usernameError"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email"
+                       placeholder="you@example.com"
+                       autocomplete="email">
+                <span class="field-error" id="emailError"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="Minimum 6 characters"
+                       autocomplete="new-password">
+                <span class="field-error" id="passwordError"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword"
+                       placeholder="Repeat your password"
+                       autocomplete="new-password">
+                <span class="field-error" id="confirmPasswordError"></span>
+            </div>
+
+            <button type="submit" class="btn btn-accent">Register</button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? <a href="login.html">Login here</a>
+        </p>
+    </div>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+    <p>&copy; 2025 BookStore. Built with HTML, CSS, JavaScript &amp; Java Servlets.</p>
+</footer>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>
