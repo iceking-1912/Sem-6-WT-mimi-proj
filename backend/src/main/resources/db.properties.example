@@ -1,0 +1,6 @@
+# Database configuration – copy this file to db.properties and fill in your credentials.
+# db.properties is listed in .gitignore and must NOT be committed.
+
+db.url=jdbc:mysql://localhost:3306/bookstore?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+db.username=root
+db.password=yourpassword

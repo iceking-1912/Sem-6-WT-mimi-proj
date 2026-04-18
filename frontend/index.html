@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Book Store</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== Navbar ===== -->
+<nav class="navbar">
+    <a href="index.html" class="brand">📚 Book<span>Store</span></a>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="cart.html">🛒 Cart <span id="cartCount"></span></a></li>
+        <li id="navAuth">
+            <a href="login.html">Login</a>
+        </li>
+    </ul>
+</nav>
+
+<!-- ===== Main ===== -->
+<main>
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Welcome to the Book Store</h1>
+        <p>Discover thousands of books at great prices. Browse, search, and add to cart!</p>
+    </section>
+
+    <!-- Search -->
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search by title or author…"
+               aria-label="Search books">
+        <button class="btn btn-primary" onclick="searchBooks()">Search</button>
+        <button class="btn btn-secondary" onclick="clearSearch()">Clear</button>
+    </div>
+
+    <!-- Section heading -->
+    <p class="section-title" id="sectionTitle">All Books</p>
+
+    <!-- Book grid / empty / spinner -->
+    <div id="spinner" class="spinner-wrapper">Loading books…</div>
+    <div class="books-grid" id="booksGrid" style="display:none;"></div>
+    <div id="emptyState" class="empty-state" style="display:none;">
+        <div class="icon">🔍</div>
+        <p>No books found. Try a different search term.</p>
+    </div>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer>
+    <p>&copy; 2025 BookStore. Built with HTML, CSS, JavaScript &amp; Java Servlets.</p>
+</footer>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
+
+<script src="js/auth.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

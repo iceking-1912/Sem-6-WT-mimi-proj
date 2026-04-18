@@ -1,0 +1,23 @@
+# Maven build output
+backend/target/
+
+# IDE files
+.idea/
+*.iml
+.classpath
+.project
+.settings/
+*.eclipse
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment / credentials
+backend/src/main/resources/db.properties
+
+# Compiled class files
+*.class
