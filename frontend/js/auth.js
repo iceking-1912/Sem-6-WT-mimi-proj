@@ -70,14 +70,22 @@ function updateNavbar() {
     if (user) {
         navAuth.innerHTML =
             `<span style="color:#ecf0f1;font-size:.9rem;">Hi, ${escapeHtml(user.username)}</span>
-             <a href="#" class="btn-nav" onclick="logout(event)" style="margin-left:.6rem;">Logout</a>`;
+             <a href="#" id="logoutBtn" class="btn-nav" style="margin-left:.6rem;">Logout</a>`;
+
+        // Wire logout via addEventListener instead of inline onclick
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                logout();
+            });
+        }
     } else {
         navAuth.innerHTML = `<a href="login.html" class="btn-nav">Login</a>`;
     }
 }
 
-function logout(event) {
-    if (event) event.preventDefault();
+function logout() {
     clearUser();
     showToast('You have been logged out.', 'success');
     setTimeout(() => { window.location.href = 'index.html'; }, 800);

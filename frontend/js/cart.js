@@ -24,6 +24,30 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+    // Wire static buttons
+    const clearCartBtn = document.getElementById('clearCartBtn');
+    if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
+
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) checkoutBtn.addEventListener('click', checkout);
+
+    // Delegated listener for dynamically rendered cart rows
+    const tbody = document.getElementById('cartBody');
+    if (tbody) {
+        tbody.addEventListener('change', (e) => {
+            if (e.target.matches('.qty-input')) {
+                const cartId = parseInt(e.target.closest('tr').id.replace('row-', ''), 10);
+                updateQuantity(cartId, e.target);
+            }
+        });
+        tbody.addEventListener('click', (e) => {
+            const btn = e.target.closest('.remove-item-btn');
+            if (!btn) return;
+            const cartId = parseInt(btn.dataset.cartId, 10);
+            removeItem(cartId);
+        });
+    }
+
     loadCart();
 });
 
@@ -96,13 +120,12 @@ function cartRow(item) {
                        type="number"
                        min="1"
                        value="${item.quantity}"
-                       onchange="updateQuantity(${item.id}, this)"
                        aria-label="Quantity for ${title}">
             </td>
             <td id="sub-${item.id}">$${sub}</td>
             <td>
-                <button class="btn btn-danger"
-                        onclick="removeItem(${item.id})">Remove</button>
+                <button class="btn btn-danger remove-item-btn"
+                        data-cart-id="${item.id}">Remove</button>
             </td>
         </tr>`;
 }

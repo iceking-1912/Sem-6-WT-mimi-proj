@@ -208,6 +208,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const searchBtn = document.getElementById('searchBtn');
+    if (searchBtn) searchBtn.addEventListener('click', searchBooks);
+
+    const clearBtn = document.getElementById('clearBtn');
+    if (clearBtn) clearBtn.addEventListener('click', clearSearch);
+
     // Delegated event listener for all "Add to Cart" buttons in the grid.
     // Using delegation avoids re-attaching listeners every time the grid re-renders
     // and removes the need for inline onclick handlers (which risk injection).
