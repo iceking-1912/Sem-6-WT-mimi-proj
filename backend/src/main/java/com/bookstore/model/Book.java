@@ -1,48 +1,15 @@
 package com.bookstore.model;
-
-/**
- * Represents a book in the store catalog.
- */
 public class Book {
-
-    private int    id;
-    private String title;
-    private String author;
-    private double price;
-    private String imageUrl;
-    private String description;
-    private String category;
-
+    public int id; public String title, author, imageUrl, description, category; public double price;
     public Book() {}
-
-    public Book(int id, String title, String author, double price,
-                String imageUrl, String description, String category) {
-        this.id          = id;
-        this.title       = title;
-        this.author      = author;
-        this.price       = price;
-        this.imageUrl    = imageUrl;
-        this.description = description;
-        this.category    = category;
+    public Book(int id, String t, String a, double p, String img, String d, String c) {
+        this.id=id; this.title=t; this.author=a; this.price=p; this.imageUrl=img; this.description=d; this.category=c;
     }
-
-    // ---- Getters ----
-
-    public int    getId()          { return id; }
-    public String getTitle()       { return title; }
-    public String getAuthor()      { return author; }
-    public double getPrice()       { return price; }
-    public String getImageUrl()    { return imageUrl; }
-    public String getDescription() { return description; }
-    public String getCategory()    { return category; }
-
-    // ---- Setters ----
-
-    public void setId(int id)                  { this.id          = id; }
-    public void setTitle(String title)         { this.title       = title; }
-    public void setAuthor(String author)       { this.author      = author; }
-    public void setPrice(double price)         { this.price       = price; }
-    public void setImageUrl(String imageUrl)   { this.imageUrl    = imageUrl; }
-    public void setDescription(String desc)    { this.description = desc; }
-    public void setCategory(String category)   { this.category    = category; }
+    public int getId() { return id; } public void setId(int id) { this.id = id; }
+    public String getTitle() { return title; } public void setTitle(String t) { this.title = t; }
+    public String getAuthor() { return author; } public void setAuthor(String a) { this.author = a; }
+    public double getPrice() { return price; } public void setPrice(double p) { this.price = p; }
+    public String getImageUrl() { return imageUrl; } public void setImageUrl(String i) { this.imageUrl = i; }
+    public String getDescription() { return description; } public void setDescription(String d) { this.description = d; }
+    public String getCategory() { return category; } public void setCategory(String c) { this.category = c; }
 }

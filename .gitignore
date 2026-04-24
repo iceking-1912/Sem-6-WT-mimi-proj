@@ -21,3 +21,6 @@ backend/src/main/resources/db.properties
 
 # Compiled class files
 *.class
+maven
+db_data
+jdk

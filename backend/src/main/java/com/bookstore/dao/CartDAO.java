@@ -1,133 +1,35 @@
 package com.bookstore.dao;
-
-import com.bookstore.model.Book;
-import com.bookstore.model.CartItem;
-import com.bookstore.util.DBConnection;
-
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Data-access object for the {@code cart} table.
- */
+import com.bookstore.model.*; import com.bookstore.util.*; import java.sql.*; import java.util.*;
 public class CartDAO {
-
-    /**
-     * Returns all cart items for the given user, with book details joined in.
-     */
-    public List<CartItem> getCartByUserId(int userId) throws SQLException {
-        String sql =
-            "SELECT c.id, c.user_id, c.book_id, c.quantity, " +
-            "       b.title, b.author, b.price, b.image_url " +
-            "FROM   cart c " +
-            "JOIN   books b ON c.book_id = b.id " +
-            "WHERE  c.user_id = ? " +
-            "ORDER BY c.id";
-        List<CartItem> items = new ArrayList<>();
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, userId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    items.add(mapWithBook(rs));
-                }
-            }
-        }
-        return items;
-    }
-
-    /**
-     * Adds {@code quantity} units of {@code bookId} to the user's cart.
-     * If the book is already present the quantity is incremented.
-     *
-     * @return the affected {@link CartItem}
-     */
-    public CartItem addToCart(int userId, int bookId, int quantity) throws SQLException {
-        // Check if the book is already in the cart
-        String check = "SELECT id, quantity FROM cart WHERE user_id = ? AND book_id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(check)) {
-            ps.setInt(1, userId);
-            ps.setInt(2, bookId);
+    public List<CartItem> getCartByUserId(int u) throws SQLException {
+        List<CartItem> list = new ArrayList<>();
+        try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement("SELECT c.*, b.title, b.author, b.price, b.image_url FROM cart c JOIN books b ON c.book_id = b.id WHERE c.user_id = ?")) {
+            ps.setInt(1, u);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    int cartId     = rs.getInt("id");
-                    int newQty     = rs.getInt("quantity") + quantity;
-                    return updateQuantity(cartId, newQty);
+                while (rs.next()) {
+                    CartItem i = new CartItem(); i.setId(rs.getInt("id")); i.setUserId(u); i.setBookId(rs.getInt("book_id")); i.setQuantity(rs.getInt("quantity"));
+                    Book b = new Book(); b.setId(i.getBookId()); b.setTitle(rs.getString("title")); b.setAuthor(rs.getString("author")); b.setPrice(rs.getDouble("price")); b.setImageUrl(rs.getString("image_url"));
+                    i.setBook(b); list.add(i);
                 }
             }
         }
-
-        // Insert new row
-        String insert = "INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, userId);
-            ps.setInt(2, bookId);
-            ps.setInt(3, quantity);
-            ps.executeUpdate();
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) {
-                    CartItem item = new CartItem();
-                    item.setId(keys.getInt(1));
-                    item.setUserId(userId);
-                    item.setBookId(bookId);
-                    item.setQuantity(quantity);
-                    return item;
-                }
-            }
-        }
-        return null;
+        return list;
     }
-
-    /**
-     * Updates the quantity of a cart item identified by {@code cartId}.
-     */
-    public CartItem updateQuantity(int cartId, int quantity) throws SQLException {
-        String sql = "UPDATE cart SET quantity = ? WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, quantity);
-            ps.setInt(2, cartId);
-            ps.executeUpdate();
-        }
-        CartItem item = new CartItem();
-        item.setId(cartId);
-        item.setQuantity(quantity);
-        return item;
-    }
-
-    /**
-     * Removes the cart row with the given primary key.
-     *
-     * @return {@code true} if a row was deleted
-     */
-    public boolean removeFromCart(int cartId) throws SQLException {
-        String sql = "DELETE FROM cart WHERE id = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, cartId);
-            return ps.executeUpdate() > 0;
+    public CartItem addToCart(int u, int b, int q) throws SQLException {
+        try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement("INSERT INTO cart (user_id, book_id, quantity) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE quantity = quantity + ?", Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, u); ps.setInt(2, b); ps.setInt(3, q); ps.setInt(4, q); ps.executeUpdate();
+            CartItem item = new CartItem(); item.setUserId(u); item.setBookId(b); item.setQuantity(q); return item;
         }
     }
-
-    // Maps a ResultSet row (with joined book columns) to a CartItem.
-    private CartItem mapWithBook(ResultSet rs) throws SQLException {
-        CartItem item = new CartItem();
-        item.setId(rs.getInt("id"));
-        item.setUserId(rs.getInt("user_id"));
-        item.setBookId(rs.getInt("book_id"));
-        item.setQuantity(rs.getInt("quantity"));
-
-        Book book = new Book();
-        book.setId(rs.getInt("book_id"));
-        book.setTitle(rs.getString("title"));
-        book.setAuthor(rs.getString("author"));
-        book.setPrice(rs.getDouble("price"));
-        book.setImageUrl(rs.getString("image_url"));
-        item.setBook(book);
-
-        return item;
+    public CartItem updateQuantity(int id, int q) throws SQLException {
+        try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement("UPDATE cart SET quantity = ? WHERE id = ?")) {
+            ps.setInt(1, q); ps.setInt(2, id); ps.executeUpdate();
+            CartItem i = new CartItem(); i.setId(id); i.setQuantity(q); return i;
+        }
+    }
+    public boolean removeFromCart(int id) throws SQLException {
+        try (Connection c = DBConnection.getConnection(); PreparedStatement ps = c.prepareStatement("DELETE FROM cart WHERE id = ?")) {
+            ps.setInt(1, id); return ps.executeUpdate() > 0;
+        }
     }
 }
