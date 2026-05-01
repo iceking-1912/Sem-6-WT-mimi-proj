@@ -27,9 +27,14 @@ const renderCart = (items) => {
 const updateQty = async (id, q) => {
     await fetch(`${API_BASE}/cart`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({cartId:id, quantity:q}) });
     loadCart();
+    if (typeof updateCartCount === 'function') updateCartCount();
 };
 const remove = async (id, silent) => {
-    if(silent || confirm('Remove?')) { await fetch(`${API_BASE}/cart?cartId=${id}`, { method:'DELETE' }); loadCart(); }
+    if(silent || confirm('Remove?')) { 
+        await fetch(`${API_BASE}/cart?cartId=${id}`, { method:'DELETE' }); 
+        loadCart(); 
+        if (typeof updateCartCount === 'function') updateCartCount();
+    }
 };
 const generateBill = () => {
     const u = getUser(); if(!u || !currentItems.length) return;

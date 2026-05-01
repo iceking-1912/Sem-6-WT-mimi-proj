@@ -16,6 +16,11 @@ public class DBConnection {
     }
     private DBConnection() {}
     public static Connection getConnection() throws SQLException {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("MySQL Driver not found", e);
+        }
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 }

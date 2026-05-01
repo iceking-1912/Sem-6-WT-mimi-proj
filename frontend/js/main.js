@@ -6,9 +6,10 @@ const loadBooks = async () => {
     } catch(e) { console.error(e); }
 };
 const render = (books) => {
-    const g = document.getElementById('booksGrid'), s = document.getElementById('spinner');
+    const g = document.getElementById('booksGrid'), s = document.getElementById('spinner'), e = document.getElementById('emptyState');
     if(s) s.style.display = 'none'; if(!g) return;
     g.style.display = books.length ? 'grid' : 'none';
+    if (e) e.style.display = books.length ? 'none' : 'block';
     g.innerHTML = books.map(b => `
         <div class="book-card">
             <img src="${b.imageUrl || 'https://via.placeholder.com/150'}" onerror="this.src='https://via.placeholder.com/150'">
@@ -25,7 +26,10 @@ const addToCart = async (id, title) => {
     const u = getUser(); if(!u) return location.href='login.html';
     try {
         const r = await fetch(`${API_BASE}/cart`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({userId:u.id, bookId:id}) });
-        if(r.ok) showToast(title + ' added!', 'success');
+        if (r.ok) {
+            showToast(title + ' added!', 'success');
+            if (typeof updateCartCount === 'function') updateCartCount();
+        }
     } catch(e) { showToast('Error', 'error'); }
 };
 const search = () => {
@@ -35,5 +39,12 @@ const search = () => {
 document.addEventListener('DOMContentLoaded', () => {
     loadBooks();
     const btn = document.getElementById('searchBtn'); if(btn) btn.onclick = search;
-    const inp = document.getElementById('searchInput'); if(inp) inp.onkeydown = (e) => e.key==='Enter' && search();
+    const inp = document.getElementById('searchInput'); if (inp) inp.onkeydown = (e) => {
+        if (e.key === 'Enter') search();
+    };
+    const clearBtn = document.getElementById('clearBtn');
+    if (clearBtn) clearBtn.onclick = () => {
+        if (inp) inp.value = '';
+        render(allBooks);
+    };
 });

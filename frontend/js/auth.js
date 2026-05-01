@@ -19,7 +19,22 @@ const setFieldError = (i, m) => {
     if (m) { i.classList.add('invalid'); if(e) { e.textContent = m; e.classList.add('visible'); } }
     else { i.classList.remove('invalid'); if(e) { e.textContent = ''; e.classList.remove('visible'); } }
 };
-document.addEventListener('DOMContentLoaded', updateNavbar);
+const updateCartCount = async () => {
+    const countEl = document.getElementById('cartCount');
+    if (!countEl) return;
+    const u = getUser();
+    if (!u) { countEl.textContent = ''; return; }
+    try {
+        const r = await fetch(`${API_BASE}/cart?userId=${u.id}`);
+        if(r.ok) {
+            const items = await r.json();
+            const totalQty = items.reduce((s, i) => s + i.quantity, 0);
+            countEl.textContent = totalQty > 0 ? `(${totalQty})` : '';
+        }
+    } catch(e) {}
+};
+
+document.addEventListener('DOMContentLoaded', () => { updateNavbar(); updateCartCount(); });
 
 const initForm = (id, url, cb) => {
     const f = document.getElementById(id); if(!f) return;

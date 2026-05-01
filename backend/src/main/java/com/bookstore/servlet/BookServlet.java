@@ -7,6 +7,9 @@ public class BookServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("application/json;charset=UTF-8"); String s = req.getParameter("search");
         try { List<Book> list = (s != null && !s.isEmpty()) ? dao.searchBooks(s) : dao.getAllBooks(); resp.getWriter().print(gson.toJson(list)); }
-        catch (Exception e) { resp.setStatus(500); }
+        catch (Exception e) { 
+            resp.setStatus(500); 
+            e.printStackTrace(resp.getWriter()); 
+        }
     }
 }
