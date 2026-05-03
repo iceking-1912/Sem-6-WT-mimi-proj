@@ -18,9 +18,17 @@ const render = (books) => {
                 <div class="book-author">by ${escapeHtml(b.author)}</div>
                 <div class="book-price">$${b.price.toFixed(2)}</div>
             </div>
-            <div class="card-footer"><button class="btn btn-accent" style="width:100%" onclick="addToCart(${b.id}, '${escapeHtml(b.title)}')">Add to Cart</button></div>
+            <div class="card-footer"><button class="btn btn-accent btn-add-cart" style="width:100%" data-book-id="${b.id}" data-book-title="${escapeHtml(b.title)}">Add to Cart</button></div>
         </div>
     `).join('');
+
+    g.querySelectorAll('.btn-add-cart').forEach(button => {
+        button.addEventListener('click', () => {
+            const bookId = Number(button.dataset.bookId);
+            const bookTitle = button.dataset.bookTitle || '';
+            addToCart(bookId, bookTitle);
+        });
+    });
 };
 const addToCart = async (id, title) => {
     const u = getUser(); if(!u) return location.href='login.html';
@@ -29,8 +37,14 @@ const addToCart = async (id, title) => {
         if (r.ok) {
             showToast(title + ' added!', 'success');
             if (typeof updateCartCount === 'function') updateCartCount();
+        } else {
+            const err = await r.text();
+            showToast(err || 'Could not add to cart', 'error');
         }
-    } catch(e) { showToast('Error', 'error'); }
+    } catch(e) {
+        showToast('Error adding to cart', 'error');
+        console.error(e);
+    }
 };
 const search = () => {
     const k = document.getElementById('searchInput').value.toLowerCase();
